@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAIS TECH MARKETPLACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --dark-bg: #050505;
+            --box-bg: rgba(10, 10, 10, 0.9);
+            --border-glow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.35;
+        }
+
+        /* Layer pemicu audio */
+        #audio-trigger {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999; cursor: pointer; background: rgba(0,0,0,0.01);
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            border-bottom: 2px solid var(--neon-blue);
+            box-shadow: var(--border-glow);
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .header h1 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+            letter-spacing: 5px; margin: 0; font-size: 1.8rem;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 10px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .tabs {
+            display: flex; justify-content: center;
+            gap: 8px; margin-bottom: 25px; flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold; font-size: 0.75rem; transition: 0.3s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--neon-blue);
+            color: black; box-shadow: var(--border-glow);
+        }
+
+        .product-section { display: none; }
+        .product-section.active { display: block; animation: fadeIn 0.4s ease; }
+
+        .product-card {
+            background: var(--box-bg);
+            border: 1px solid #222;
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .product-info h3 { margin: 0; color: var(--neon-blue); font-size: 0.85rem; text-transform: uppercase; }
+        .price { font-size: 1rem; font-weight: bold; color: #fff; }
+
+        .order-btn {
+            background: var(--neon-blue);
+            color: black; text-decoration: none;
+            padding: 8px 16px; border-radius: 2px;
+            font-weight: bold; font-size: 0.75rem;
+            position: relative; z-index: 10000;
+        }
+
+        #music-status {
+            position: fixed; top: 10px; right: 10px;
+            font-size: 9px; color: var(--neon-blue);
+            z-index: 1000; background: rgba(0,0,0,0.8);
+            padding: 4px 8px; border: 1px solid var(--neon-blue);
+        }
+
+        .contact-footer {
+            position: fixed; bottom: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 12px; text-align: center;
+            border-top: 1px solid var(--neon-blue);
+            display: flex; justify-content: center; gap: 10px; z-index: 1000;
+        }
+
+        .contact-footer a { color: var(--neon-blue); text-decoration: none; font-size: 0.65rem; border: 1px solid var(--neon-blue); padding: 4px 8px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix-canvas"></canvas>
+    
+    <div id="audio-trigger" onclick="startAudio()"></div>
+    <div id="music-status">🔈 Tap to play Audio</div>
+    
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://files.catbox.moe/fgbmpp.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="header">
+        <h1>𝗣𝗔𝗜𝗦 𝗧𝗘𝗖𝗛</h1>
+        <p style="color: #00f3ff; font-size: 0.65rem; letter-spacing: 2px;">DIGITAL SOLUTIONS MARKETPLACE</p>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'vps')">VPS RDP</button>
+            <button class="tab-btn" onclick="openTab(event, 'panel')">PANEL</button>
+            <button class="tab-btn" onclick="openTab(event, 'bot')">SEWA BOT</button>
+            <button class="tab-btn" onclick="openTab(event, 'promo')">PROMO</button>
+        </div>
+
+        <div id="vps" class="product-section active">
+            <div class="product-card"><div class="product-info"><h3>RAM 4 CORE 2</h3><div class="price">Rp70k</div></div><a href="https://wa.me/6283862014089?text=Order+VPS+4/2" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>RAM 8 CORE 4</h3><div class="price">Rp100k</div></div><a href="https://wa.me/6283862014089?text=Order+VPS+8/4" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>RAM 16 CORE 8</h3><div class="price">Rp160k</div></div><a href="https://wa.me/6283862014089?text=Order+VPS+16/8" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>RAM 32 CORE 16</h3><div class="price">Rp215k</div></div><a href="https://wa.me/6283862014089?text=Order+VPS+32/16" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>RAM 56 CORE 4</h3><div class="price">Rp160k</div></div><a href="https://wa.me/6283862014089?text=Order+VPS+56/4" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>RAM 64 CORE 32</h3><div class="price">Rp430k</div></div><a href="https://wa.me/6283862014089?text=Order+VPS+64/32" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>RAM 128 CORE 32</h3><div class="price">Rp580k</div></div><a href="https://wa.me/6283862014089?text=Order+VPS+128/32" class="order-btn">ORDER</a></div>
+        </div>
+
+        <div id="panel" class="product-section">
+            <div class="product-card"><div class="product-info"><h3>PANEL 2 GB</h3><div class="price">Rp3.000</div></div><a href="https://wa.me/6283862014089?text=Order+Panel+2GB" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>PANEL 4 GB</h3><div class="price">Rp5.000</div></div><a href="https://wa.me/6283862014089?text=Order+Panel+4GB" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>PANEL 10 GB</h3><div class="price">Rp8.000</div></div><a href="https://wa.me/6283862014089?text=Order+Panel+10GB" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>PANEL UNLIMITED</h3><div class="price">Rp20.000</div></div><a href="https://wa.me/6283862014089?text=Order+Panel+Unli" class="order-btn">ORDER</a></div>
+        </div>
+
+        <div id="bot" class="product-section">
+            <div class="product-card"><div class="product-info"><h3>BOT 1 MINGGU</h3><div class="price">Rp5.000</div></div><a href="https://wa.me/6283862014089?text=Sewa+Bot+1+Minggu" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>BOT 1 BULAN</h3><div class="price">Rp10.000</div></div><a href="https://wa.me/6283862014089?text=Sewa+Bot+1+Bulan" class="order-btn">ORDER</a></div>
+            <div class="product-card"><div class="product-info"><h3>BOT PERMANEN</h3><div class="price">Rp50.000</div></div><a href="https://wa.me/6283862014089?text=Sewa+Bot+Permanen" class="order-btn">ORDER</a></div>
+        </div>
+
+        <div id="promo" class="product-section">
+            <div class="product-card"><div class="product-info"><h3>RESELLER PANEL</h3><div class="price">Rp30.000</div></div><a href="https://wa.me/6283862014089?text=Order+Reseller+Panel" class="order-btn">AMBIL</a></div>
+        </div>
+    </div>
+
+    <div class="contact-footer">
+        <a href="https://t.me/paistech">TELEGRAM</a>
+        <a href="https://whatsapp.com/channel/0029VbApj8yHQbSBHSAKWt2u">CHANNEL</a>
+        <a href="https://wa.me/6283862014089">CS PAIS</a>
+    </div>
+
+    <script>
+        /* Matrix Animation */
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const letters = "0101"; const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00f3ff';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+        /* Audio Logic */
+        const audio = document.getElementById('bgMusic');
+        const trigger = document.getElementById('audio-trigger');
+
+        function startAudio() {
+            audio.play().then(() => {
+                document.getElementById('music-status').innerHTML = "🎵 Music: Playing";
+                trigger.style.display = 'none';
+            }).catch(() => {});
+        }
+
+        function openTab(evt, tabName) {
+            let sections = document.getElementsByClassName("product-section");
+            let buttons = document.getElementsByClassName("tab-btn");
+            for (let x of sections) x.classList.remove("active");
+            for (let b of buttons) b.classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            startAudio();
+        }
+    </script>
+</body>
+</html>
